@@ -1,4 +1,4 @@
-name: osmium Docker Image
+name: streets-gl Docker Image
 
 env:
   REGISTRY: ghcr.io
