@@ -1,0 +1,61 @@
+name: planetiler-streetsgl Docker Image
+
+env:
+  REGISTRY: ghcr.io
+  NAME: planetiler-streetsgl
+  
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'planetiler-streetsgl/*'
+      - '.github/workflows/*planetiler-streetsgl*'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'planetiler-streetsgl/*'
+      - '.github/workflows/*planetiler-streetsgl*'
+  schedule:
+    - cron: '23 1 * * 0'  # Sunday at 1:23
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: set release date
+        run: |
+          echo "RELEASE_DATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
+
+      - id: githubactor
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.actor }}
+      - id: step2
+        run: echo "IMAGE_NAME=ghcr.io/${{ steps.githubactor.outputs.lowercase }}/${{ env.NAME }}" >> ${GITHUB_ENV}
+        
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: ./${{ env.NAME }}/
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.RELEASE_DATE }}, ${{ env.IMAGE_NAME }}:latest
+          labels: ${{ env.RELEASE_DATE }}, latest
