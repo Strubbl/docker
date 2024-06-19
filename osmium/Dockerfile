@@ -7,15 +7,19 @@ RUN apt-get update && \
         g++ \
         git \
         make \
-        libboost-program-options-dev \
+        libboost-dev \
         libbz2-dev \
         libexpat1-dev \
         libgdal-dev \
         libgeos++-dev \
         liblz4-dev \
+        libosmpbf-dev \
         libproj-dev \
+        libprotobuf-dev \
         libprotozero-dev \
+        protobuf-compiler \
         zlib1g-dev && \
+        \
         git clone --branch v2.20.0 https://github.com/osmcode/libosmium.git /libosmium && \
         mkdir /libosmium/build && \
         cd /libosmium/build && \
