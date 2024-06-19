@@ -7,6 +7,7 @@ RUN apt-get update && \
         g++ \
         git \
         make \
+        libboost-program-options-dev \
         libboost-dev \
         libbz2-dev \
         libexpat1-dev \
