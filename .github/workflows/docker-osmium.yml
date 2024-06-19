@@ -59,5 +59,3 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.RELEASE_DATE }}, ${{ env.IMAGE_NAME }}:latest
           labels: ${{ env.RELEASE_DATE }}, latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
