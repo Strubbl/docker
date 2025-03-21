@@ -18,6 +18,7 @@ RUN apt-get update && \
         libproj-dev \
         libprotobuf-dev \
         libprotozero-dev \
+        nlohmann-json3-dev \
         protobuf-compiler \
         zlib1g-dev && \
         \
